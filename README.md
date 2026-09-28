@@ -2,6 +2,14 @@
 
 학습시간 시계열 데이터를 추가·수정·삭제하고, 요약 정보를 바탕으로 AI와 대화하는 과제용 애플리케이션입니다.
 
+## 기술 스택
+
+- 백엔드: Python, FastAPI, Uvicorn, Pydantic
+- 데이터베이스: Firebase Cloud Firestore
+- AI: OpenAI Python SDK, Codyssey OpenAI 호환 API
+- 프론트엔드: HTML, CSS, JavaScript
+- 배포: Render, Vercel
+
 ## 현재 구현된 기능
 
 - 데이터 CRUD 및 기간/개수/평균/최대/최소/최근 추세 요약
@@ -16,7 +24,6 @@
 - 120개 원본 데이터와 메모는 GPT에 보내지 않고 작은 요약 JSON만 전송
 - 최근 메시지 4개만 전송하고 각 메시지를 500자로 제한
 - 질문을 500자로 제한하고 출력은 기본 220토큰으로 제한
-- 출력은 기본 220토큰으로 제한
 - 개발과 화면 확인은 mock 모드로 진행하고 마지막 실제 확인만 OpenAI 모드 사용
 
 ## 로컬 실행
@@ -61,17 +68,29 @@ FIREBASE_SERVICE_ACCOUNT_JSON={서비스 계정 JSON 전체}
 
 로컬에서는 `GOOGLE_APPLICATION_CREDENTIALS=/절대/경로/service-account.json` 방식도 사용할 수 있습니다.
 
-## 배포 전 남은 작업
-
-- Vercel에 프론트 배포 및 화면 확인
-- README에 배포 URL과 제출 스크린샷 추가
-
 ## 배포 주소
 
-- GitHub: https://github.com/yak7297/p3-2
-- 백엔드 API: https://p3-2-backend.onrender.com
-- Swagger UI: https://p3-2-backend.onrender.com/docs
-- 프론트엔드: Vercel 배포 후 추가
+- GitHub: [https://github.com/yak7297/p3-2](https://github.com/yak7297/p3-2)
+- 프론트엔드: [https://p3-2-frontend.vercel.app](https://p3-2-frontend.vercel.app)
+- 백엔드 API: [https://p3-2-backend.onrender.com](https://p3-2-backend.onrender.com)
+- Swagger UI: [https://p3-2-backend.onrender.com/docs](https://p3-2-backend.onrender.com/docs)
+
+Render 무료 인스턴스는 사용하지 않을 때 정지되므로 첫 요청에 약 50초 이상 걸릴 수 있습니다.
+
+## 환경 변수
+
+백엔드 최소 환경변수는 다음과 같습니다. 실제 키와 서비스 계정 JSON은 GitHub에 올리지 않습니다.
+
+```dotenv
+STORAGE_BACKEND=firestore
+AI_MODE=openai
+OPENAI_API_KEY=본인의_키
+OPENAI_BASE_URL=https://copa.codyssey.kr/v1
+OPENAI_MODEL=gpt-5.4-mini
+MAX_OUTPUT_TOKENS=220
+FIREBASE_SERVICE_ACCOUNT_JSON={서비스 계정 JSON 전체}
+ALLOWED_ORIGINS=https://p3-2-frontend.vercel.app
+```
 
 ## Vercel 환경 변수
 
@@ -82,3 +101,39 @@ API_BASE_URL=https://p3-2-backend.onrender.com
 ```
 
 빌드 과정에서 이 값으로 `dist/config.js`를 만들며, 브라우저에는 API 키나 Firebase 서비스 계정 키가 포함되지 않습니다.
+
+## 제출 스크린샷
+
+아래 화면으로 필수 기능과 실제 배포 상태를 확인할 수 있습니다. API 키와 Firebase 서비스 계정 값은 포함하지 않았습니다.
+
+### 데이터 요약 기반 AI 채팅
+
+![데이터 요약과 AI 질문 및 답변](docs/screenshots/chat-summary.png)
+
+### 데이터 관리 CRUD
+
+![데이터 추가 후 목록과 요약 갱신](docs/screenshots/data-crud.png)
+
+### 저장된 대화 목록
+
+![저장된 대화 목록](docs/screenshots/conversation-history.png)
+
+### 대화 기록 불러오기
+
+![저장된 대화 불러오기](docs/screenshots/conversation-load.png)
+
+### Firestore 데이터베이스 생성
+
+![Cloud Firestore 데이터베이스](docs/screenshots/firestore.png)
+
+### Render 백엔드 배포 성공
+
+![Render FastAPI 백엔드 배포 성공](docs/screenshots/backend-deploy.png)
+
+### Vercel 프론트엔드 배포 성공
+
+![Vercel 프론트엔드 배포 성공](docs/screenshots/frontend-deploy.png)
+
+### FastAPI Swagger API 문서
+
+![FastAPI CRUD, 대화 기록, AI 채팅 API 문서](docs/screenshots/swagger-api.png)
