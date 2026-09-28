@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>학습시간 데이터 AI 비서</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header>
+    <div><p class="eyebrow">DATA AI ASSISTANT</p><h1>학습시간 데이터 비서</h1></div>
+    <span id="mode" class="badge">연결 확인 중</span>
+  </header>
+  <nav>
+    <button data-view="chat" class="active">AI 채팅</button>
+    <button data-view="data">데이터 관리</button>
+    <button data-view="history">대화 기록</button>
+  </nav>
+  <main>
+    <p id="notice" role="status"></p>
+    <section class="summary">
+      <article><small>기간</small><strong id="period">—</strong></article>
+      <article><small>기록 수</small><strong id="count">—</strong></article>
+      <article><small>평균</small><strong id="average">—</strong></article>
+      <article><small>최근 추세</small><strong id="trend">—</strong></article>
+    </section>
+
+    <section id="view-chat" class="view card">
+      <div class="section-title"><h2>데이터 기반 AI 채팅</h2><button id="new-chat" class="secondary">새 대화</button></div>
+      <div id="messages" class="messages"><p class="empty">학습 기록에 대해 질문해보세요.</p></div>
+      <form id="chat-form" class="row">
+        <input id="question" maxlength="500" required placeholder="최근 학습시간 추세를 알려줘">
+        <button id="send">보내기</button>
+      </form>
+    </section>
+
+    <section id="view-data" class="view card" hidden>
+      <div class="section-title"><h2>학습 데이터 관리</h2><span>단위: 분</span></div>
+      <form id="data-form" class="data-form">
+        <label>날짜<input id="date" type="date" required></label>
+        <label>학습시간<input id="value" type="number" min="0" max="1440" step="0.1" required></label>
+        <label>메모<input id="memo" maxlength="300"></label>
+        <button id="save-data">추가</button>
+        <button id="cancel-edit" type="button" class="secondary" hidden>취소</button>
+      </form>
+      <div class="table-wrap"><table><thead><tr><th>날짜</th><th>시간</th><th>메모</th><th>관리</th></tr></thead><tbody id="data-rows"></tbody></table></div>
+    </section>
+
+    <section id="view-history" class="view card" hidden>
+      <div class="section-title"><h2>저장된 대화</h2><span>선택하면 전체 메시지를 불러옵니다.</span></div>
+      <div id="history-list"></div>
+    </section>
+  </main>
+</body>
+</html>
+
