@@ -6,7 +6,7 @@
 
 - 데이터 CRUD 및 기간/개수/평균/최대/최소/최근 추세 요약
 - 대화 자동 저장, 목록 조회, 전체 메시지 불러오기, 삭제
-- 요약 정보를 시스템 지침에 넣는 OpenAI Responses API 채팅
+- 요약 정보를 시스템 지침에 넣는 OpenAI 호환 Chat Completions API 채팅
 - 개발 중 토큰을 전혀 사용하지 않는 `AI_MODE=mock`
 - 로컬 JSON 저장과 Firestore 저장 모드
 - FastAPI Swagger UI와 바닐라 HTML/CSS/JavaScript 화면
@@ -63,8 +63,22 @@ FIREBASE_SERVICE_ACCOUNT_JSON={서비스 계정 JSON 전체}
 
 ## 배포 전 남은 작업
 
-- GitHub 저장소 생성 및 코드 push
-- Render 환경변수 등록 후 백엔드 배포와 `/docs` 확인
-- Vercel용 프론트 빌드 설정 및 `API_BASE_URL` 연결
-- 실제 Firestore/OpenAI 동작 확인
+- Vercel에 프론트 배포 및 화면 확인
 - README에 배포 URL과 제출 스크린샷 추가
+
+## 배포 주소
+
+- GitHub: https://github.com/yak7297/p3-2
+- 백엔드 API: https://p3-2-backend.onrender.com
+- Swagger UI: https://p3-2-backend.onrender.com/docs
+- 프론트엔드: Vercel 배포 후 추가
+
+## Vercel 환경 변수
+
+Vercel 프로젝트의 Root Directory를 `frontend`로 지정하고 아래 환경변수를 등록합니다.
+
+```dotenv
+API_BASE_URL=https://p3-2-backend.onrender.com
+```
+
+빌드 과정에서 이 값으로 `dist/config.js`를 만들며, 브라우저에는 API 키나 Firebase 서비스 계정 키가 포함되지 않습니다.

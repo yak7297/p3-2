@@ -8,3 +8,4 @@ __pycache__/
 *service-account*.json
 backend/secrets/
 backend/local-demo.json
+frontend/dist/
