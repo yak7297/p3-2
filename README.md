@@ -122,6 +122,8 @@ uvicorn main:app --reload
 
 ## 주요 API 사용 예시
 
+모든 JSON 응답은 `backend/app/models.py`의 Pydantic 응답 모델로 검증되며 Swagger에도 스키마가 표시됩니다. 주요 모델은 `DataRecord`, `DataSummary`, `ConversationListItem`, `ConversationRecord`, `ChatResponse`, `HealthResponse`입니다. 따라서 서버 코드가 명세와 다른 형태를 반환하면 FastAPI의 응답 검증 단계에서 오류를 발견할 수 있습니다.
+
 학습 기록 추가:
 
 ```bash

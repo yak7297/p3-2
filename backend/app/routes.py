@@ -5,7 +5,16 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException
 
 from . import services
-from .models import ChatInput, ConversationInput, DataInput
+from .models import (
+    ChatInput,
+    ChatResponse,
+    ConversationInput,
+    ConversationListItem,
+    ConversationRecord,
+    DataInput,
+    DataRecord,
+    DataSummary,
+)
 from .storage import get_store
 
 
@@ -19,24 +28,24 @@ def valid_id(item_id):
     return item_id
 
 
-@router.get("/data", tags=["data"])
+@router.get("/data", tags=["data"], response_model=list[DataRecord])
 def list_data(store=Depends(get_store)):
     return sorted(
         store.list("data"), key=lambda row: (row["date"], row["id"]), reverse=True
     )
 
 
-@router.get("/data/summary", tags=["data"])
+@router.get("/data/summary", tags=["data"], response_model=DataSummary)
 def data_summary(store=Depends(get_store)):
     return services.summarize(store.list("data"))
 
 
-@router.post("/data", status_code=201, tags=["data"])
+@router.post("/data", status_code=201, tags=["data"], response_model=DataRecord)
 def add_data(body: DataInput, store=Depends(get_store)):
     return store.save("data", body.model_dump(mode="json"))
 
 
-@router.put("/data/{item_id}", tags=["data"])
+@router.put("/data/{item_id}", tags=["data"], response_model=DataRecord)
 def update_data(item_id: str, body: DataInput, store=Depends(get_store)):
     item_id = valid_id(item_id)
     store.get("data", item_id)
@@ -48,7 +57,11 @@ def delete_data(item_id: str, store=Depends(get_store)):
     store.delete("data", valid_id(item_id))
 
 
-@router.get("/conversations", tags=["conversations"])
+@router.get(
+    "/conversations",
+    tags=["conversations"],
+    response_model=list[ConversationListItem],
+)
 def list_conversations(store=Depends(get_store)):
     items = [
         {key: value for key, value in item.items() if key != "messages"}
@@ -57,12 +70,19 @@ def list_conversations(store=Depends(get_store)):
     return sorted(items, key=lambda item: item["updated_at"], reverse=True)
 
 
-@router.get("/conversations/{item_id}", tags=["conversations"])
+@router.get(
+    "/conversations/{item_id}", tags=["conversations"], response_model=ConversationRecord
+)
 def get_conversation(item_id: str, store=Depends(get_store)):
     return store.get("conversations", valid_id(item_id))
 
 
-@router.post("/conversations", status_code=201, tags=["conversations"])
+@router.post(
+    "/conversations",
+    status_code=201,
+    tags=["conversations"],
+    response_model=ConversationRecord,
+)
 def save_conversation(body: ConversationInput, store=Depends(get_store)):
     item = body.model_dump()
     item["updated_at"] = datetime.now(timezone.utc).isoformat()
@@ -74,7 +94,7 @@ def delete_conversation(item_id: str, store=Depends(get_store)):
     store.delete("conversations", valid_id(item_id))
 
 
-@router.post("/chat", tags=["chat"])
+@router.post("/chat", tags=["chat"], response_model=ChatResponse)
 def chat(body: ChatInput, store=Depends(get_store)):
     if not chat_lock.acquire(blocking=False):
         raise HTTPException(429, "다른 답변을 생성 중입니다.")
@@ -111,4 +131,3 @@ def chat(body: ChatInput, store=Depends(get_store)):
         }
     finally:
         chat_lock.release()
-

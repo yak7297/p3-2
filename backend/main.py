@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.config import setting
+from app.models import HealthResponse
 from app.routes import router
 
 
@@ -26,7 +27,7 @@ app.add_middleware(
 app.include_router(router)
 
 
-@app.get("/health", tags=["system"])
+@app.get("/health", tags=["system"], response_model=HealthResponse)
 def health():
     return {
         "status": "ok",
@@ -39,4 +40,3 @@ def health():
 frontend = Path(__file__).resolve().parents[1] / "frontend"
 if frontend.exists():
     app.mount("/", StaticFiles(directory=frontend, html=True), name="frontend")
-

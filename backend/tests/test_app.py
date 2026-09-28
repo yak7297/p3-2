@@ -104,4 +104,15 @@ def test_conversation_manual_save_and_delete(client):
 
 def test_docs(client):
     assert client.get("/docs").status_code == 200
-    assert client.get("/openapi.json").status_code == 200
+    schema = client.get("/openapi.json")
+    assert schema.status_code == 200
+    paths = schema.json()["paths"]
+    assert paths["/api/data"]["get"]["responses"]["200"]["content"][
+        "application/json"
+    ]["schema"]["items"]["$ref"].endswith("/DataRecord")
+    assert paths["/api/data/summary"]["get"]["responses"]["200"]["content"][
+        "application/json"
+    ]["schema"]["$ref"].endswith("/DataSummary")
+    assert paths["/api/chat"]["post"]["responses"]["200"]["content"][
+        "application/json"
+    ]["schema"]["$ref"].endswith("/ChatResponse")
